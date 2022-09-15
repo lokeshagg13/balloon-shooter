@@ -38,6 +38,10 @@ game_title_coords = (500, 30)
 game_title = 'Shoot It'
 balloon_speed = 5
 gun_speed = 5
+bullet_speed = balloon_speed * 10
+max_bullets = 10
+bullets = []
+
 
 #########################
 
@@ -51,6 +55,7 @@ def create_balloon():
     balloon_rect.left = game_panel_coords[0] + 10
     return (balloon, balloon_rect)
 
+
 def create_gun():
     gun = pygame.image.load('gun.png')
     gun = pygame.transform.scale(gun, (80, 60))
@@ -58,6 +63,34 @@ def create_gun():
     gun_rect.top = game_panel_top_y
     gun_rect.right = game_panel_coords[0] + game_panel_dims[0] - 10
     return (gun, gun_rect)
+
+
+def create_bullet(x, y):
+    bullet = pygame.image.load('bullet.png')
+    bullet = pygame.transform.scale(bullet, (50, 25))
+    bullet_rect = bullet.get_rect()
+    bullet_rect.top = y
+    bullet_rect.right = x
+    bullets.append((bullet, bullet_rect))
+    return (bullet, bullet_rect)
+
+def move_all_bullets():
+    for bullet_info in bullets:
+        bullet_rect = bullet_info[1]
+        if bullet_rect.left > balloon_rect.right + bullet_speed:
+            bullet_rect.left -= bullet_speed
+
+def check_bullet_position():
+    wasted_bullets_idx = []
+    for bullet_idx, bullet_info in enumerate(bullets):
+        if bullet_rect.left <= balloon_rect.right + 5:
+            if bullet_rect.top >= balloon_rect.top - 5 and bullet_rect.bottom <= balloon_rect.bottom + 5:
+                return "WON"
+            else:
+                wasted_bullets_idx.append(bullet_idx)
+    for idx in wasted_bullets_idx:
+        del bullets[idx]
+    return "RUNNING"
 
 #########################
 
@@ -72,6 +105,7 @@ pygame.display.set_caption(game_title)
 
 balloon, balloon_rect = create_balloon()
 gun, gun_rect = create_gun()
+bullet, bullet_rect = create_bullet(100, 100, 1)
 
 ##########################
 
@@ -97,6 +131,7 @@ while run:
         balloon_speed = -balloon_speed
     balloon_rect.update([balloon_rect.left, balloon_rect.top + balloon_speed, balloon_rect.width, balloon_rect.height])
     screen.blit(balloon, balloon_rect)
+    screen.blit(bullet, bullet_rect)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -107,6 +142,9 @@ while run:
         gun_rect.top += gun_speed
     elif keys[pygame.K_UP] or keys[pygame.K_w] and gun_rect.top > game_panel_top_y:
         gun_rect.top -= gun_speed
+    if keys[pygame.K_SPACE] and len(bullets) < 10:
+        new_bullet = create_bullet(gun_rect.left, (gun_rect.top + gun_rect.bottom) / 2)
+
 
     pygame.display.flip()
 
