@@ -77,12 +77,13 @@ def create_bullet(x, y):
 def move_all_bullets():
     for bullet_info in bullets:
         bullet_rect = bullet_info[1]
-        if bullet_rect.left > balloon_rect.right + bullet_speed:
+        if bullet_rect.left > balloon_rect.right:
             bullet_rect.left -= bullet_speed
 
 def check_bullet_position():
     wasted_bullets_idx = []
     for bullet_idx, bullet_info in enumerate(bullets):
+        bullet_rect = bullet_info[1]
         if bullet_rect.left <= balloon_rect.right + 5:
             if bullet_rect.top >= balloon_rect.top - 5 and bullet_rect.bottom <= balloon_rect.bottom + 5:
                 return "WON"
@@ -105,7 +106,6 @@ pygame.display.set_caption(game_title)
 
 balloon, balloon_rect = create_balloon()
 gun, gun_rect = create_gun()
-bullet, bullet_rect = create_bullet(100, 100, 1)
 
 ##########################
 
@@ -118,6 +118,8 @@ run = True
 while run:
     timer.tick(60)
     screen.fill(black)
+    move_all_bullets()
+    print(check_bullet_position())
 
     game_title = label_font.render('SHOOT IT', True, white)
     screen.blit(game_title, (game_title_coords[0], game_title_coords[1]))
@@ -131,19 +133,23 @@ while run:
         balloon_speed = -balloon_speed
     balloon_rect.update([balloon_rect.left, balloon_rect.top + balloon_speed, balloon_rect.width, balloon_rect.height])
     screen.blit(balloon, balloon_rect)
-    screen.blit(bullet, bullet_rect)
+
+    for (bullet, bullet_rect) in bullets:
+        screen.blit(bullet, bullet_rect)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE and len(bullets) < 10:
+                create_bullet(gun_rect.left, (gun_rect.top + gun_rect.bottom) / 2)
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_DOWN] or keys[pygame.K_s] and gun_rect.bottom < game_panel_bottom_y:
         gun_rect.top += gun_speed
     elif keys[pygame.K_UP] or keys[pygame.K_w] and gun_rect.top > game_panel_top_y:
         gun_rect.top -= gun_speed
-    if keys[pygame.K_SPACE] and len(bullets) < 10:
-        new_bullet = create_bullet(gun_rect.left, (gun_rect.top + gun_rect.bottom) / 2)
+
 
 
     pygame.display.flip()
