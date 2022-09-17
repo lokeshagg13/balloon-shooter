@@ -19,9 +19,9 @@ yellow = (255, 255, 0)
 
 # Fonts
 
-label_font = pygame.font.Font('Fonts\\Plaguard-ZVnjx.otf', 80)
-medium_font = pygame.font.Font('Fonts\\Plaguard-ZVnjx.otf', 40)
-small_font = pygame.font.Font('Fonts\\Roboto-Bold.ttf', 20)
+label_font = pygame.font.Font('assets\\fonts\\Plaguard-ZVnjx.otf', 80)
+medium_font = pygame.font.Font('assets\\fonts\\Plaguard-ZVnjx.otf', 40)
+small_font = pygame.font.Font('assets\\fonts\\Roboto-Bold.ttf', 20)
 
 ########################
 
@@ -58,7 +58,7 @@ bullets = []
 # Game Methods
 
 def create_balloon():
-    balloon = pygame.image.load('Images\\balloon.gif')
+    balloon = pygame.image.load('assets\\images\\balloon.gif')
     balloon = pygame.transform.scale(balloon, (40, 80))
     balloon_rect = balloon.get_rect()
     balloon_rect.top = game_panel_top_y
@@ -67,7 +67,7 @@ def create_balloon():
 
 
 def create_fused_balloon(last_balloon_y):
-    fused = pygame.image.load('Images\\burst.png')
+    fused = pygame.image.load('assets\\images\\burst.png')
     fused = pygame.transform.scale(fused, (40, 40))
     fused_rect = fused.get_rect()
     fused_rect.top = last_balloon_y
@@ -76,7 +76,7 @@ def create_fused_balloon(last_balloon_y):
 
 
 def create_gun():
-    gun = pygame.image.load('Images\\gun.png')
+    gun = pygame.image.load('assets\\images\\gun.png')
     gun = pygame.transform.scale(gun, (80, 60))
     gun_rect = gun.get_rect()
     gun_rect.top = game_panel_top_y
@@ -85,7 +85,7 @@ def create_gun():
 
 
 def create_bullet(x, y):
-    bullet = pygame.image.load('Images\\bullet.png')
+    bullet = pygame.image.load('assets\\images\\bullet.png')
     bullet = pygame.transform.scale(bullet, (50, 25))
     bullet_rect = bullet.get_rect()
     bullet_rect.top = y
